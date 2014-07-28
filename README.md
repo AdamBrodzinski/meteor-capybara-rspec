@@ -1,120 +1,102 @@
-Selenium RSpec Test Framework boilerplate
-=========================================
+# Capybara for Meteor
 
-Overview
---------
-The project is a ready-to-go starting point for developing standalone Selenium tests.
+I needed a robust framework to test my Meteor apps while the current Meteor specific frameworks are maturing. Meteor-Rspec-Capybara allows you to run all of your acceptance tests using Ruby, RSpec, and Capybara. It also includes a few Meteor helpers to make life easy.
 
-Out of the box this project supports:
+You can execute JavaScript and return values as needed with the `runJS` command. This allows you to check the state of the app without completely relying on the UI selectors.
 
-* Test execution using Firefox ,Chrome, PhantomJS
-* Integration into most CI servers (Jenkins, Bamboo)
-* A human readable HTML report
-* Capturing screenshots of test failures
-* Extensible configuration supporting executing against different environments (eg. QA, Staging, Production)
-* Non-instrusive & automated setup of chromedriver and phantomjs
-* Fixed scheme for tagging tests using tag() method
+<br>
+## Installation
 
+0. Download the zip file from repo
+0. Unzip/move folder into your Meteor app `/tests` directory
+0. Rename folder to `acceptance` or something meaningful
+0. `$ cd acceptance`
+0. `$ bundle install`
+0. `$ ./setup_drivers.sh` to setup drives (Chrome, PhantomJS)
 
-How to use it
--------------
+<br>
+## Usage
 
-### Setup
+0. Add spec files to the `tests/acceptance/specs/` folder and add files with the naming scheme `foo_spec.rb` & `bar_spec.rb`
+0. `$ cd tests/acceptance`
+0. run all tests with terminal command `$ rpsec`
+0. run matching test descriptions with grep `$ rpsec -e "show blog"`
 
-You will need a recent version of Ruby (minimum recommended version is 1.9.3, but 2.x is best). The recommended way to setup Ruby is using either [rbenv](https://github.com/sstephenson/rbenv) or [rvm](https://rvm.io/).
+<br>
+### Acceptance Tests
 
-Once you have a working modern Ruby setup you need to install the needed gems. Do this using bundle:
+```ruby
 
-    $ bundle install
+feature "Show Blog Post" do
+  before(:each) { visit "/blog" }
 
-And if using rbenv, don't forget:
+  context "As a normal user" do
+    scenario "I should see at least one post" do
+      has_a_post = runJS "!! $('.post-item').length"
+      has_a_post.should == true
+    end
 
-    $ rbenv rehash
+    scenario "I should see the full post if they click on title" do
+      click_on "My First Blog Post"
+      page.should have_content "Hello World"
+    end
+  end
 
-To run tests using Firefox, no further setup is needed (assuming you have Firefox installed already).
-
-To install chromedriver (for running tests with Chrome), and PhantomJS (for running tests headlessly)
-
-    $ ./setup_drivers.sh
-
-
-### To run tests
-
-To simply run all tests using all defaults:
-
-    $ rspec
-
-To run tests using Chrome or PhantomJS:
-
-    $ T_BROWSER=chrome rspec
-    $ T_BROWSER=phantomjs rspec
-
-To run tests against a specific environment:
-
-    $ T_ENVIRONMENT=production rspec
-
-To run tests without debug logging on the console
-
-    $ T_LOG_LEVEL=warn rspec
+  context "As an author/editor" do
+    # should see an edit link ...
+  end
+end
+```
 
 
-To exclude tests that are expected to fail, or only run smoke tests
+### Execute and Return Meteor Code
 
-    $ rspec -t '~XFail'
-    $ rspec -t 'Smoke'
+Sometimes you just need more than the UI to verify something has happened. Using the `runJS` method executes the script and returns it's value.
 
-Mix-and-match any of the above invocations as desired!
+```ruby
+  user_logged_in = runJS("!!Meteor.user()")
 
-How to make it into test suite for your own website
----------------------------------------------------
+  taskCount = runJS "Tasks.find(...)"
 
-* Clone it
-* Remove the original git remote
-* Add your own git remote
-* Change the configuration for your own servers (tcfg.yml)
-* Remove the example tests, add your own first tests
-* Push it
-* Integrate it into your continuous integration system
-* Write more tests
+  user_logged_in.should == true
+  taskCount.should == 3
+```
 
 
-Configuration
--------------
+### Integration-ish Tests
 
-This project uses the [tcfg](https://github.com/rschultheis/tcfg) gem for test suite configuration and control.
+I needed clientside integration tests and the current frameworks months ago were really really buggy. I spent more time getting the tests to actually "work" than writing passing tests.
 
-### Accessing configuration
+Running them through Capybara provided a stable way to (albeit slowly) run tests and still get work done. This method heavily utilizes the ability to execute scripts in the client and return values.
 
-You can get access to the configuration object in any RSpec example block, or any before or after block by simply calling tcfg.
-There are examples of this in example_spec.rb and in several support files.
+```ruby
+  docId = runJS "
+    PostsController.create({
+      title: 'Foo Post',
+      author: 'Mark Twain'
+    });
+  "
+
+  post = runJS "db.posts.findOne({ _id: #{docId} })"
+
+  post.title.should == "Foo Post"
+  post.author.should == "Mark Twain"
+```
+
+```ruby
+  result = runJS "postHelpers.createSlug('the foo bar post')"
+  post.author.should == "the-foo-bar-post"
+```
+
+<br>
+## Notes
+
+**Forked and based off of**  
+[rschultheis](1)'s [rspec-capybara-starter](2)  
+
+**ThoughtBot's Capybara Cheat Sheet:**  
+https://learn.thoughtbot.com/test-driven-rails-resources/capybara.pdf
 
 
-TODO
-----
-This project should incorporate all accepted best practices for Standalone RSpec Selenium testing.
-Some of the missing bits:
-
-* Setup custom browser profiles to avoid popups as much as possible
-* Embed screenshots inside html report.  Screenshots are right now saved external to the html report.
-* IE support
-* SauceLabs support
-* Concurrency (using parallel_spec ?)
-* Pattern based tagging (eg. for Jira tickets)
-* Establish some kind of Page object model / pattern for helper methods (not sure that traditional POM is a best practice for Ruby projects)
-* Test/Support Windows and Linux setup / test running
-* Video capture of test runs
-* ??? What is your best practice for selenium testing?
-
-
-Linux setup notes
-------------------
-If you are trying to get this running on a headless linux box (eg. an EC2 Ubuntu instance) this might help.
-
-In order to get setup_drivers.sh to run, I had to install unzip:
-
-    $ sudo apt-get install unzip
-
-In order to get phantomjs to run, you may have to install the following libraries:
-
-    $ sudo apt-get install libfreetype6-dev libfontconfig1-dev
-
+[1]: https://github.com/rschultheis
+[2]: https://github.com/rschultheis/rspec_capybara_starter
