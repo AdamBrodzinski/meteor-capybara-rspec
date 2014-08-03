@@ -2,15 +2,18 @@
 ---
 
 #start with global configuration
-BROWSER: firefox
-LOG_LEVEL: debug
-BASE_URL: http://google.com
+BROWSER: phantomjs
+#BROWSER: chrome
+#BROWSER: firefox
+LOG_LEVEL: INFO
+#LOG_LEVEL: debug
+BASE_URL: http://localhost:3000
 
 #and environment based overrides
 t_environments:
-  qa:
-    BASE_URL: http://google.com
+  stage:
+    BASE_URL: http://your-staging.meteor.com
 
   production:
-    BASE_URL: https://google.com
+    BASE_URL: https://your-prod.meteor.com
 
