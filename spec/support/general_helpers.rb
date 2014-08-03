@@ -9,6 +9,10 @@ module GeneralTestHelpers
     SecureRandom.hex(length/2).to_s.force_encoding('utf-8')
   end
 
+  def runJS(statement)
+    evaluate_script(statement)
+  end    
+
 end
 
 #and the following config allows us to simply call the helpers
