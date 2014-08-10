@@ -91,6 +91,8 @@ Running them through Capybara provided a stable way to (albeit slowly) run tests
 <br>
 ## Notes
 
+Currently working with latency compensation can bit a bit tricky. For now i'm using something like `sleep 0.2` to wait for the serverside to catch up (for example checking if a document is in the collection right after inserting it).
+
 **Forked and based off of**  
 [rschultheis](1)'s [rspec-capybara-starter](2)  
 
