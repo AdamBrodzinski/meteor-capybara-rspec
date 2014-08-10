@@ -2,8 +2,8 @@
 ---
 
 #start with global configuration
-BROWSER: phantomjs
-#BROWSER: chrome
+BROWSER: chrome
+#BROWSER: phantomjs  #warning Traceur doesn't work with PhantomJS
 #BROWSER: firefox
 LOG_LEVEL: INFO
 #LOG_LEVEL: debug
