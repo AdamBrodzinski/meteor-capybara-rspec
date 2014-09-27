@@ -20,6 +20,7 @@ module MeteorHelpers
   end     
 
   # login user using Accounts UI (not tested with Bootstrap)
+  # returns user's id
   def login_user
     logout_user() #make sure we're not already logged in from prev test
 
@@ -29,7 +30,14 @@ module MeteorHelpers
     fill_in "Password", with: "password"
 
     find('#login-buttons-password').click
-  end             
+    
+    # wait until user is logged in before moving forward
+    until runJS("Meteor.user()")
+      sleep 0.01
+    end
+    
+    return runJS "Meteor.userId()"
+  end
 end
 
 
