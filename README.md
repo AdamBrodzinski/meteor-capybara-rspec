@@ -11,7 +11,7 @@ You can execute JavaScript and return values as needed with the `runJS` command.
 0. Unzip/move folder into your Meteor app `/tests` directory
 0. Rename folder to `acceptance` or something meaningful
 0. `$ cd acceptance`
-0. `$ bundle install`
+0. `$ bundle install`  (you may need to install bundle with `gem install bundle`)
 0. `$ ./setup_drivers.sh` to setup phantomjs & Chrome drivers
 
 <br>
