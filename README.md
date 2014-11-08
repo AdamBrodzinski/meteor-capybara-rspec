@@ -19,7 +19,7 @@ You can execute JavaScript and return values as needed with the `runJS` command.
 
 0. Add spec files to the `tests/acceptance/specs/` folder and add files with the naming scheme `foo_spec.rb` & `bar_spec.rb`
 0. `$ cd tests/acceptance`
-0. run all tests with terminal command `$ rpsec`
+0. run all tests with terminal command `$ bundle exec rpsec` or just `rspec` if it's already installed
 0. run matching test descriptions with grep `$ rpsec -e "show blog"`
 
 <br>
