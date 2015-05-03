@@ -5,28 +5,21 @@ When building Blonk I needed a robust framework to test my Meteor apps while the
 You can execute JavaScript and return values as needed with the `runJS` command. This allows you to check the state of the app without completely relying on the UI selectors.
 
 <br>
-## Installation
 
-0. Download the zip file from repo
-0. Unzip/move folder into your Meteor app `/tests` directory
-0. Rename folder to `acceptance` or something meaningful
-0. `$ cd acceptance`
-0. `$ bundle install`  (you may need to install bundle with `gem install bundle`)
-0. `$ ./setup_drivers.sh` to setup phantomjs & Chrome drivers
-
-<br>
-## Usage (using default meteor app)
+## Install/Usage (using default meteor app)
 
 0. `meteor create test-app`
 0. `cd test-app`
-0. `mkdir -p tests/capybara`
-0. copy contents of repo into capybara diretory
-0. `$ cd tests/capybara`
+0. `git clone https://github.com/AdamBrodzinski/meteor-capybara-rspec.git tests/capybara/`
+0. `rm -Rf tests/capybara/.git` - remove this git repo
+0. `cd tests/capybara`
 0. `bundle install` - installs Ruby gems
 0. `./setup_drivers.sh` - installs Chrome and PhantomJS
 0. `bundle exec rspec` - runs boilerplate tests
 
 The tests should have two passing and one failing if you haven't changed the default app. To add more tests just add them to the specs directory and adding spec on the end, ex: `yourthing_spec.rb`. You can run specific tests using `rpsec -e "show blog"`
+
+Screenshots will be stored in `tests/capybara/support/screenshots` and are captured on error automatically (this can be disabled).
 
 <br>
 ### Acceptance Tests
