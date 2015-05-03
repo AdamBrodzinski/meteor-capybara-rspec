@@ -2,7 +2,7 @@ module MeteorHelpers
   # return the Meteor user id
   def user_id
     evaluate_script("Meteor.userId();")
-  end  
+  end
 
   # logout Meteor user if logged in
   def logout_user
@@ -12,12 +12,12 @@ module MeteorHelpers
   # uses Iron Router navigation instead of a complete refresh
   def go_to_url(url)
     evaluate_script("Router.go('#{url}')")
-  end     
+  end
 
   # use path IronRouter route name, 'editPost' instead of '/posts/edit/'
   def go_to_route(route_name)
     evaluate_script("Router.go('#{route_name}')")
-  end     
+  end
 
   # login user using Accounts UI (not tested with Bootstrap)
   # returns user's id
@@ -30,12 +30,12 @@ module MeteorHelpers
     fill_in "Password", with: "password"
 
     find('#login-buttons-password').click
-    
+
     # wait until user is logged in before moving forward
     until runJS("Meteor.user()")
       sleep 0.01
     end
-    
+
     return runJS "Meteor.userId()"
   end
 end

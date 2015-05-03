@@ -15,12 +15,18 @@ You can execute JavaScript and return values as needed with the `runJS` command.
 0. `$ ./setup_drivers.sh` to setup phantomjs & Chrome drivers
 
 <br>
-## Usage
+## Usage (using default meteor app)
 
-0. Add spec files to the `tests/acceptance/specs/` folder and add files with the naming scheme `foo_spec.rb` & `bar_spec.rb`
-0. `$ cd tests/acceptance`
-0. run all tests with terminal command `$ bundle exec rpsec` or just `rspec` if it's already installed
-0. run matching test descriptions with grep `$ rpsec -e "show blog"`
+0. `meteor create test-app`
+0. `cd test-app`
+0. `mkdir -p tests/capybara`
+0. copy contents of repo into capybara diretory
+0. `$ cd tests/capybara`
+0. `bundle install` - installs Ruby gems
+0. `./setup_drivers.sh` - installs Chrome and PhantomJS
+0. `bundle exec rspec` - runs boilerplate tests
+
+The tests should have two passing and one failing if you haven't changed the default app. To add more tests just add them to the specs directory and adding spec on the end, ex: `yourthing_spec.rb`. You can run specific tests using `rpsec -e "show blog"`
 
 <br>
 ### Acceptance Tests

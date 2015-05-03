@@ -14,6 +14,3 @@ t_environments:
   stage:
     BASE_URL: http://your-staging.meteor.com
 
-  production:
-    BASE_URL: https://your-prod.meteor.com
-

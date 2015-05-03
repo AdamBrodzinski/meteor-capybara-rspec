@@ -1,19 +1,26 @@
-describe "searching Google.com" do
+describe "Default Meteor App" do
 
   before(:each) do
+    # tcfg.yml config is set to localhost:3000 using Chrome
     visit('/')
   end
 
   #this test should pass
-  it "should allow me to search for 'green cheese'", tag('Smoke') do
-    fill_in('q', with: 'green cheese')
-    page.should have_content('Green cheese is a term for a fresh cheese, one that has not thoroughly dried yet, nor been aged, which is white in colour and usually round in shape')
+  it "should have correct heading", tag('Smoke') do
+    expect(page).to have_content("Welcome to Meteor!")
   end
 
-  #this test should fail
-  it "should show 'five stars' if I put five astericks into search box", tag('XFail') do
-    fill_in('q', with: '*****')
-    page.should have_content('five stars')
+  # this test should pass
+  it "should respond to a click" do
+    click_on "Click Me"
+    click_on "Click Me"
+    expect(page).to have_content("You've pressed the button 2 times")
+  end
+
+  # this is failing, make me pass!
+  it "should have Testing Meteor in body" do
+    expect(page).to have_content("Testing Meteor!")
   end
 
 end
+
