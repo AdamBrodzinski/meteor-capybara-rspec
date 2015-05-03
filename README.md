@@ -1,6 +1,6 @@
 # Capybara for Meteor
 
-I needed a robust framework to test my Meteor apps while the current Meteor specific frameworks are maturing. Meteor-Rspec-Capybara allows you to run all of your acceptance tests using Ruby, RSpec, and Capybara. It also includes a few Meteor helpers to make life easy.
+When building Blonk I needed a robust framework to test my Meteor apps while the current Meteor specific frameworks were maturing. Meteor-Rspec-Capybara allows you to run all of your acceptance tests using Ruby, RSpec, and Capybara. It also includes a few Meteor helpers to make life easy.
 
 You can execute JavaScript and return values as needed with the `runJS` command. This allows you to check the state of the app without completely relying on the UI selectors.
 
@@ -31,6 +31,7 @@ feature "Show Blog Post" do
   before(:each) { visit "/blog" }
 
   context "As a normal user" do
+    # peek into the clientside using runJS
     scenario "I should see at least one post" do
       has_a_post = runJS "!! $('.post-item').length"
       has_a_post.should == true
@@ -56,37 +57,12 @@ Sometimes you just need more than the UI to verify something has happened. Using
 ```ruby
   user_logged_in = runJS("!!Meteor.user()")
 
-  taskCount = runJS "Tasks.find(...)"
+  task_count = runJS "Tasks.find(...)"
 
   user_logged_in.should == true
-  taskCount.should == 3
+  task_count.should == 3
 ```
 
-
-### Integration-ish Tests
-
-I needed clientside integration tests and the current frameworks months ago were really really buggy. I spent more time getting the tests to actually "work" than writing passing tests.
-
-Running them through Capybara provided a stable way to (albeit slowly) run tests and still get work done. This method heavily utilizes the ability to execute scripts in the client and return values.
-
-```ruby
-  docId = runJS "
-    PostsController.create({
-      title: 'Foo Post',
-      author: 'Mark Twain'
-    });
-  "
-
-  post = runJS "db.posts.findOne({ _id: #{docId} })"
-
-  post.title.should == "Foo Post"
-  post.author.should == "Mark Twain"
-```
-
-```ruby
-  result = runJS "postHelpers.createSlug('the foo bar post')"
-  post.author.should == "the-foo-bar-post"
-```
 
 <br>
 ## Notes
